@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\courController;
+use App\Http\Controllers\ProfesseurController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 // ------------------- Authentification
-
 Route::post('/signup', [UtilisateurController::class, 'signup']);
 Route::post('/login', [UtilisateurController::class, 'login']);
 Route::get('/logout', [UtilisateurController::class, 'logout']);
@@ -30,8 +30,14 @@ Route::get('/logout', [UtilisateurController::class, 'logout']);
 
 
 // ------------------- Cours
-
 Route::get('cours/index', [courController::class, 'index']);
 Route::post('cours/create', [courController::class, 'create']);
 Route::put('cours/update/{id}', [courController::class, 'update']);
 Route::delete('cours/destroy/{id}', [courController::class, 'destroy']);
+
+
+//professeur routes:
+Route::get('prof/index', [ProfesseurController::class, 'index']);
+Route::post('prof/create', [ProfesseurController::class, 'create']);
+Route::put('prof/update/{id}', [ProfesseurController::class, 'update']);
+Route::delete('prof/destroy/{id}', [ProfesseurController::class, 'destroy']);
