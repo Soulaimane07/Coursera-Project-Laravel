@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UtilisateurController;
+use App\Http\Controllers\courController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,19 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+// ------------------- Authentification
+
+Route::post('/signup', [UtilisateurController::class, 'signup']);
+Route::post('/login', [UtilisateurController::class, 'login']);
+Route::get('/logout', [UtilisateurController::class, 'logout']);
+
+
+
+// ------------------- Cours
+
+Route::get('cours/index', [courController::class, 'index']);
+Route::post('cours/create', [courController::class, 'create']);
+Route::put('cours/update/{id}', [courController::class, 'update']);
+Route::delete('cours/destroy/{id}', [courController::class, 'destroy']);
