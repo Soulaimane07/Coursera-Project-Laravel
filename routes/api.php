@@ -41,3 +41,5 @@ Route::get('prof/index', [ProfesseurController::class, 'index']);
 Route::post('prof/create', [ProfesseurController::class, 'create']);
 Route::put('prof/update/{id}', [ProfesseurController::class, 'update']);
 Route::delete('prof/destroy/{id}', [ProfesseurController::class, 'destroy']);
+
+Route::post('pdf', [courController::class, 'getText']);

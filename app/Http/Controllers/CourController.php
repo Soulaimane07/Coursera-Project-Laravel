@@ -16,6 +16,24 @@ class CourController extends Controller
         return response()->json($cour );
     }
 
+    public function getText(Request $req)
+    {
+
+        if($req->hasfile('pdf')){
+            $file = $req->file('pdf');
+            $extention = $file->getClientOriginalExtension();
+            $filename = time(). '' .$extention;
+            $file->move('uploads/certificats/', $filename);
+            $parser = new \Smalot\PdfParser\Parser();
+            $pdf = $parser->parseFile(public_path('uploads/certificats/'.$filename));
+    
+            $text = $pdf->getText();
+            echo $text;
+        }
+
+
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -27,8 +45,6 @@ class CourController extends Controller
             'desc' => 'required',
             'dateDebut' => 'required',
             'dateFin' => 'required',
-           
-
         ]);
 
         $cour = new Cour;
@@ -37,17 +53,6 @@ class CourController extends Controller
         $cour->desc = $req->input('desc');
         $cour->dateDebut = $req->input('dateDebut');
         $cour->dateFin = $req->input('dateFin');
-
-
-
-
-        // $cour = Cour::create([
-        //     // 'image' => $req->image,
-        //     'libelle' => $req->libelle,
-        //     'desc' => $req->desc,
-        //     'dateDebut' => $req->dateDebut,
-        //     'dateFin' => $req->dateFin,
-        // ]);
 
         if($req->hasfile('image')){
             $file = $req->file('image');
@@ -58,12 +63,7 @@ class CourController extends Controller
         }
 
         $cour->save();
-
-
-        // if($req->hasfile('image')){
-
-        // return $req->file('image');
-        // return response()->json(['status' => 'success', 'cour' => $cour]);
+        return response()->json(['status' => 'success', 'cour' => $cour]);
     }
 
     /**
@@ -93,18 +93,8 @@ class CourController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string  $id)
+    public function update(Request $req, string  $id)
     {
-        
-
-        $request->validate([
-            'image' => 'required',
-            'libelle' => 'required',
-            'desc' => 'required',
-            'dateDebut' => 'required',
-            'dateFin' => 'required',
-        ]);
-
         $cour = Cour::find($req->id);
 
         $cour->libelle = $req->libelle;
@@ -122,18 +112,9 @@ class CourController extends Controller
 
         $cour->save();
 
-        // $courUpdate->update([
-        //     'image' => $request->image,
-        //     'libelle' => $request->libelle,
-        //     'desc' => $request->desc,
-        //     'dateDebut' => $request->dateDebut,
-        //     'dateFin' => $request->dateFin,
-
-        // ]);
-
         return response()->json([
             'message' => 'cours mis à jour avec succès',
-            'data' => $courUpdate
+            'data' => $cour
         ]);
     }
 
