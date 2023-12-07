@@ -49,7 +49,8 @@ class UtilisateurController extends Controller
         $credentials = $request->only('email', 'password');
     
         if (Auth::attempt($credentials)) {
-            return Auth::user();
+            // return Auth::user();
+            return response()->json(['status' => 'success', 'user' => Auth::user()]);
         } else {
             return back()->withErrors([
                 'email.required' => 'Le champ email est obligatoire.',
@@ -59,6 +60,8 @@ class UtilisateurController extends Controller
 
             ])->onlyInput('email', 'password');
         }
+    
+    
     }
 
     public function logout(Request $request){

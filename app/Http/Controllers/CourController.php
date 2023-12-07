@@ -13,7 +13,7 @@ class CourController extends Controller
     public function index()
     {
         $cour = Cour::all();
-        return response()->json($cour );
+        return response()->json(['status' => 'success', 'cours' => $cour]);
     }
 
     public function getText(Request $req)
