@@ -15,4 +15,9 @@ class Professeur extends Model
         'password',
       
     ];
+
+    public function cours()
+    {
+        return $this->belongsToMany(Cour::class, 'cours_professeur', 'professeur_id', 'cour_id');
+    }
 }

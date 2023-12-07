@@ -37,9 +37,12 @@ Route::delete('cours/destroy/{id}', [courController::class, 'destroy']);
 
 
 //professeur routes:
-Route::get('prof/index', [ProfesseurController::class, 'index']);
+Route::get('prof/showOne/{id}', [ProfesseurController::class, 'showOne']);
+Route::get('prof/showAll', [ProfesseurController::class, 'showAll']);
 Route::post('prof/create', [ProfesseurController::class, 'create']);
 Route::put('prof/update/{id}', [ProfesseurController::class, 'update']);
 Route::delete('prof/destroy/{id}', [ProfesseurController::class, 'destroy']);
+Route::post('prof/{professeurId}/assignCours', [ProfesseurController::class, 'assignCours']);
+Route::post('prof/{professeurId}/assignGroupes', [ProfesseurController::class, 'assignGroupes']);
 
 Route::post('pdf', [courController::class, 'getText']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Professeur;
+use App\Models\Cour;
 use Illuminate\Http\Request;
 
 class ProfesseurController extends Controller
@@ -10,128 +11,110 @@ class ProfesseurController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function showOne($id)
     {
-        $prof = Professeur::all();
-        return response()->json($prof );
+        $professeur = Professeur::with('cours')->find($id);
+
+    if (!$professeur) {
+        return response()->json(['status' => 'error', 'message' => 'Professeur non trouvé.'], 404);
+    }
+
+    return response()->json(['status' => 'success', 'professeur' => $professeur]);
+    }
+
+
+    public function showAll()
+    {
+        $professeurs = Professeur::with('cours')->get();
+
+        return response()->json(['status' => 'success', 'professeurs' => $professeurs]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $req)
+    public function create(Request $request)
     {
-        $req->validate([
+        $request->validate([
             'nom' => 'required',
             'prenom' => 'required',
-            'email' => 'required',
-            'password' =>'required'
+            'email' => 'required','email','regex:/@emsi\.ma$/i',
+            'password' => 'required',
         ]);
 
-        $prof = Professeur::create([
-            'nom' => $req->nom,
-            'prenom' => $req->prenom,
-            'email' => $req->email,
-            'password' =>bcrypt($req->input('password')),
-     
-
-
+        $professeur = Professeur::create([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'email' => $request->email,
+            'password' => bcrypt($request->input('password')),
         ]);
 
-        return response()->json(['status' => 'success', 'professeur' => $prof]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Professeur $professeur)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Professeur $professeur)
-    {
-        //
+        return response()->json(['status' => 'success', 'professeur' => $professeur]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    // public function update(Request $request, Professeur $id)
-    // {
-    //     $profUpdate= Professeur::find($id);
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nom' => 'required',
+            'prenom' => 'required',
+            'email' => 'required','email','regex:/@emsi\.ma$/i',
+            'password' => 'required',
+        ]);
 
-    //     // $request->validate([
-    //     //     'nom' => 'required',
-    //     //     'prenom' => 'required',
-    //     //     'email' => 'required',
-    //     //     'password' =>'required'
-    //     // ]);
-    //     $profUpdate->update([
-    //         'nom' => $request->nom,
-    //         'prenom' => $request->prenom,
-    //         'email' => $request->email,
-    //         'password' => $request->password,
-        
-    //     ]);
+        $professeur = Professeur::findOrFail($id);
 
-    //     return response()->json([
-    //         'message' => 'professeur mis à jour avec succès',
-    //         'data' => $profUpdate
-    //     ]);
-    // }
+        if (!$professeur) {
+            return response()->json(['status' => 'error', 'message' => 'Professeur non trouvé.']);
+        }
 
-    public function update(Request $req, $id)
-{
-    $req->validate([
-        'nom' => 'required',
-        'prenom' => 'required',
-        'email' => 'required',
-        'password' => 'required',
-    ]);
+        // Mettre à jour les attributs du modèle
+        $professeur->update([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom,
+            'email' => $request->email,
+            'password' => bcrypt($request->input('password')),
+        ]);
 
-    
-    $prof = Professeur::findOrFail($id);
-
-    if (!$prof) {
-        return response()->json(['status' => 'error', 'message' => 'Professeur non trouvé.']);
+        return response()->json(['status' => 'success', 'professeur' => $professeur]);
     }
-
-    // Mettre à jour les attributs du modèle
-    $prof->update([
-        'nom' => $req->nom,
-        'prenom' => $req->prenom,
-        'email' => $req->email,
-        'password' => bcrypt($req->input('password')),
-    ]);
-
-    return response()->json(['status' => 'success', 'professeur' => $prof]);
-}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Professeur $id)
+    public function destroy($id)
     {
-        if (!$id) {
-            return response()->json(['message' => 'prof introuvable'], 404);
-        } else {
-            // Appelle la méthode delete sur l'instance unique du modèle
-            $id->delete();
-    
-            // Autres actions après la suppression si nécessaire
-            return response()->json(['message' => 'professeur supprimé avec succès'], 200);
+        $professeur = Professeur::find($id);
+
+        if (!$professeur) {
+            return response()->json(['status' => 'error', 'message' => 'Professeur non trouvé.']);
         }
+
+        // Supprimer le professeur
+        $professeur->delete();
+
+        return response()->json(['status' => 'success', 'message' => 'Professeur supprimé avec succès']);
     }
+
+    /**
+     * Assigner des cours à un professeur.
+     */
+    public function assignCours(Request $request, $professeurId)
+{
+    $professeur = Professeur::find($professeurId);
+
+    if (!$professeur) {
+        return response()->json(['status' => 'error', 'message' => 'Professeur non trouvé.']);
+    }
+
+    $coursIds = $request->input('cours_ids', []);
+
+    $professeur->cours()->attach($coursIds);
+
+    return response()->json(['status' => 'success', 'professeur' => $professeur]);
+
+    // return $request;
+}
 }

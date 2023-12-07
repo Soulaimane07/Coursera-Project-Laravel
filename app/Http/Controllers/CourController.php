@@ -33,6 +33,7 @@ class CourController extends Controller
 
 
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -97,10 +98,18 @@ class CourController extends Controller
     {
         $cour = Cour::find($req->id);
 
-        $cour->libelle = $req->libelle;
-        $cour->desc = $req->desc;
-        $cour->dateDebut = $req->dateDebut;
-        $cour->dateFin = $req->dateFin;
+        if($req->libelle){
+            $cour->libelle = $req->libelle;
+        }
+        if($req->desc){
+            $cour->desc = $req->desc;
+        }
+        if($req->dateDebut){
+            $cour->dateDebut = $req->dateDebut;
+        }
+        if($req->dateFin){
+            $cour->dateFin = $req->dateFin;
+        }
 
         if($req->hasfile('image')){
             $file = $req->file('image');

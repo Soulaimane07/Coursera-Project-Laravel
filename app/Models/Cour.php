@@ -16,4 +16,8 @@ class Cour extends Model
         'dateFin',
     ];
 
+    public function professeurs()
+    {
+        return $this->belongsToMany(Professeur::class, 'cours_professeur', 'cour_id', 'professeur_id');
+    }
 }
