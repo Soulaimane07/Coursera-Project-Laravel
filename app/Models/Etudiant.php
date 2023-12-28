@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+class Etudiant extends Model
+{
+    use HasFactory;
+    protected $fillable = [
+        'CIN',
+        'nom',
+        'prenom',
+        'dateNaissance',
+        'email',
+        'password',
+        'numTele',
+        'groupe_id'
+    ];
+    public function groupe(): BelongsTo {
+        return $this->belongsTo(Etudiant::class);
+    }
+    public function certificats()
+    {
+        return $this->hasMany(Certificat::class);
+    }
+}

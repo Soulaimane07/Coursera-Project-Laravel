@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 
 class CourController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $cour = Cour::all();
@@ -34,10 +31,6 @@ class CourController extends Controller
 
     }
     
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $req)
     {
         $req->validate([
@@ -67,33 +60,11 @@ class CourController extends Controller
         return response()->json(['status' => 'success', 'cour' => $cour]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Cour $cour)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Cour $cour)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $req, string  $id)
     {
         $cour = Cour::find($req->id);
@@ -127,37 +98,14 @@ class CourController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    // public function destroy($id)
-    // {
-    //     $cour = Cour::find($id);
-
-    //     if (!$cour) {
-    //         return response()->json(['message' => 'Cours introuvable'], 404);
-    //     }
-    //     else{
-    //         $cour->delete();
-    //         return response()->json(['message' => 'Cours supprimée avec succes'], 200);
-    //    }
-    // }
-
     public function destroy(Cour $id)
-{
-    // A ce stade, $id est déjà une instance du modèle Cour correspondant à l'identifiant fourni dans l'URL
-
-    // Vérifie si le modèle existe
-    if (!$id) {
-        return response()->json(['message' => 'Cours introuvable'], 404);
-    } else {
-        // Appelle la méthode delete sur l'instance unique du modèle
-        $id->delete();
-
-        // Autres actions après la suppression si nécessaire
-
-        return response()->json(['message' => 'Cours supprimé avec succès'], 200);
+    {
+        if (!$id) {
+            return response()->json(['message' => 'Cours introuvable'], 404);
+        } else {
+            $id->delete();
+            return response()->json(['message' => 'Cours supprimé avec succès'], 200);
+        }
     }
-}
 
 }

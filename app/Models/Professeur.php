@@ -13,11 +13,16 @@ class Professeur extends Model
         'prenom',
         'email',
         'password',
+
       
     ];
-
     public function cours()
     {
         return $this->belongsToMany(Cour::class, 'cours_professeur', 'professeur_id', 'cour_id');
+    }
+        
+    public function groupes()
+    {
+        return $this->belongsToMany(Groupe::class);
     }
 }
